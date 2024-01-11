@@ -1,0 +1,14 @@
+<!-- registration-form.component.html -->
+
+<div>
+    <h2>Formulario de Registro</h2>
+  
+    <label for="token">Token de Seguridad:</label>
+    <input type="text" id="token" [(ngModel)]="token" readonly>
+  
+    <!-- Agrega aquí los campos del formulario para el registro de clientes -->
+  
+    <button (click)="generateToken()">Generar Nuevo Token</button>
+  
+    <!-- Agrega aquí el botón para enviar el formulario -->
+  </div>
