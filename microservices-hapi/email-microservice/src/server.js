@@ -12,7 +12,7 @@ const init = async () => {
         // Configurar conexión MySQL
         const dbConnection = await createConnection({
             host: 'localhost',
-            user: 'root',
+            user: 'marcos',
             password: 'SQLPassword',
             database: 'customersystem',
         });

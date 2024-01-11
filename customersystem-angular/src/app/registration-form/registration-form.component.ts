@@ -1,6 +1,8 @@
 // registration-form.component.ts
 
 import { Component, OnInit } from '@angular/core';
+import { Customer } from '../models/customer';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { SdkService } from '../service/sdk.service';
 
 @Component({
@@ -11,8 +13,15 @@ import { SdkService } from '../service/sdk.service';
 export class RegistrationFormComponent implements OnInit {
   token: string = '';
   registrationData: any = {}; // Ajusta el tipo según los campos reales del formulario
-
-  constructor(private sdkService: SdkService) { }
+  formCustomer: FormGroup;
+  constructor(private sdkService: SdkService,
+    public form: FormBuilder) {
+      this.formCustomer = this.form.group({
+        Name: [''],
+        Email: [''],
+        Phone: ['']
+      });
+     }
 
   ngOnInit(): void {
     this.generateSecurityToken();
@@ -31,7 +40,11 @@ export class RegistrationFormComponent implements OnInit {
   }
 
   registerCustomer() {
-    this.sdkService.registerCustomer(this.registrationData).subscribe(
+    var customer=new Customer();
+    customer.Name=this.formCustomer.value.Name;
+    customer.Name=this.formCustomer.value.Email;
+    customer.Name=this.formCustomer.value.Phone;
+    this.sdkService.registerCustomer(customer).subscribe(
       (response: any) => {
         console.log('Cliente registrado exitosamente:', response);
       },

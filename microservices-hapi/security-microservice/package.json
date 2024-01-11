@@ -11,6 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "@hapi/hapi": "^21.3.2",
+    "@hapi/joi": "^17.1.1",
+    "mysql2": "^3.7.0",
     "uuid": "^9.0.1"
   }
 }

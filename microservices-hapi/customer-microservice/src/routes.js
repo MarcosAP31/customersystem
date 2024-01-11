@@ -1,7 +1,13 @@
 const Joi = require('@hapi/joi');
 const amqp = require('amqplib');
-const { validateToken } = require('../security-microservice/src/securityUtils');
-
+const { validateToken } = require('../../security-microservice/src/tokenHandler');
+const { createConnection } = require('mysql2/promise');
+const pool = createConnection({
+    host: 'localhost',
+    user: 'marcos',
+    password: 'SQLPassword',
+    database: 'customersystem',
+});
 module.exports = [
     {
         method: 'POST',
@@ -23,7 +29,7 @@ module.exports = [
                 const RegistrationDate = new Date().toISOString();
 
                 // Registrar customere en la base de datos
-                const [CustomerId] = await pool.execute('INSERT INTO customers (Name, Email, Phone, RegistrationDate) VALUES (?, ?, ?, ?)', [Name, Email, Phone, RegistrationDate]);
+                const [CustomerId] = await pool.execute('INSERT INTO customer (Name, Email, Phone, RegistrationDate) VALUES (?, ?, ?, ?)', [Name, Email, Phone, RegistrationDate]);
 
                 // Consultar el parámetro de envío de correos en Redis
                 const sendEmailEnabled = await getAsync('sendEmailEnabled');
