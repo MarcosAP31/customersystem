@@ -7,11 +7,18 @@ const init = async () => {
         host: 'localhost',
     });
 
-    // Registra las rutas desde el archivo de rutas
-    server.route(routes);
+    try {
+        // Registra las rutas desde el archivo de rutas
+        server.route(routes);
 
-    await server.start();
-    console.log('Security Microservice running on %s', server.info.uri);
+        // Inicia el servidor Hapi
+        await server.start();
+
+        console.log('Security Microservice is running at: %s', server.info.uri);
+    } catch (error) {
+        console.error('Error starting the server:', error);
+        process.exit(1);
+    }
 };
 
 init();

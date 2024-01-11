@@ -1,13 +1,19 @@
 const Joi = require('@hapi/joi');
 const amqp = require('amqplib');
-const { validateToken } = require('../../security-microservice/src/tokenHandler');
 const { createConnection } = require('mysql2/promise');
+const { promisify } = require('util');
+
 const pool = createConnection({
     host: 'localhost',
     user: 'marcos',
     password: 'SQLPassword',
     database: 'customersystem',
 });
+
+// Funciones promisificadas para Redis
+const getAsync = promisify(redisClient.get).bind(redisClient);
+const setAsync = promisify(redisClient.set).bind(redisClient);
+
 module.exports = [
     {
         method: 'POST',
@@ -21,15 +27,14 @@ module.exports = [
                     return h.response('Token not valid').code(401);
                 }
 
-                // Realizar el registro del customere en la base de datos
                 const { Name, Email, Phone } = request.payload;
+                const registrationDate = new Date().toISOString();
 
-                // Puedes agregar más validaciones antes de realizar el registro
-
-                const RegistrationDate = new Date().toISOString();
-
-                // Registrar customere en la base de datos
-                const [CustomerId] = await pool.execute('INSERT INTO customer (Name, Email, Phone, RegistrationDate) VALUES (?, ?, ?, ?)', [Name, Email, Phone, RegistrationDate]);
+                // Registrar customer en la base de datos
+                const [customerId] = await pool.execute(
+                    'INSERT INTO customer (Name, Email, Phone, RegistrationDate) VALUES (?, ?, ?, ?)',
+                    [Name, Email, Phone, registrationDate]
+                );
 
                 // Consultar el parámetro de envío de correos en Redis
                 const sendEmailEnabled = await getAsync('sendEmailEnabled');
@@ -41,7 +46,7 @@ module.exports = [
                     const queue = 'sendEmailQueue';
 
                     const customerData = {
-                        CustomerId,
+                        CustomerId: customerId,
                         Name,
                         Email,
                         Phone,

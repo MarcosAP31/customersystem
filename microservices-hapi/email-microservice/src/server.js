@@ -4,10 +4,7 @@ const { createConnection } = require('mysql2/promise');
 
 const init = async () => {
     try {
-        const server = Hapi.server({
-            port: 3005,
-            host: 'localhost',
-        });
+        const server = await setupServer();
 
         // Configurar conexión MySQL
         const dbConnection = await createConnection({
@@ -18,28 +15,48 @@ const init = async () => {
         });
 
         // Configurar conexión RabbitMQ
-        const connection = await amqp.connect('amqp://localhost');
-        const channel = await connection.createChannel();
-        const queue = 'sendEmailQueue';
+        const channel = await setupRabbitMQ();
 
-        await channel.assertQueue(queue, { durable: false });
-
-        channel.consume(queue, (msg) => {
-            try {
-                const emailData = JSON.parse(msg.content.toString());
-                saveSentEmail(dbConnection, emailData);
-                console.log('Received message from sendEmailQueue:', emailData);
-            } catch (error) {
-                console.error('Error processing message:', error);
-            }
-        }, { noAck: true });
+        // Consumir mensajes del RabbitMQ
+        consumeMessages(channel, dbConnection);
 
         await server.start();
         console.log('Email Microservice running on %s', server.info.uri);
     } catch (error) {
         console.error('Error starting the server:', error);
-        process.exit(1); // Exit the process if there's an error during initialization
+        process.exit(1); // Salir del proceso si hay un error durante la inicialización
     }
+};
+
+const setupServer = async () => {
+    const server = Hapi.server({
+        port: 3005,
+        host: 'localhost',
+    });
+
+    return server;
+};
+
+const setupRabbitMQ = async () => {
+    const connection = await amqp.connect('amqp://localhost');
+    const channel = await connection.createChannel();
+    const queue = 'sendEmailQueue';
+
+    await channel.assertQueue(queue, { durable: false });
+
+    return channel;
+};
+
+const consumeMessages = (channel, dbConnection) => {
+    channel.consume('sendEmailQueue', (msg) => {
+        try {
+            const emailData = JSON.parse(msg.content.toString());
+            saveSentEmail(dbConnection, emailData);
+            console.log('Received message from sendEmailQueue:', emailData);
+        } catch (error) {
+            console.error('Error processing message:', error);
+        }
+    }, { noAck: true });
 };
 
 const saveSentEmail = async (dbConnection, emailData) => {

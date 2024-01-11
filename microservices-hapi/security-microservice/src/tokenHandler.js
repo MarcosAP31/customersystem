@@ -9,14 +9,13 @@ const pool = createConnection({
 });
 
 const generateToken = async () => {
-    const newToken = uuid.v4().substr(0, 8);
-
     try {
+        const newToken = uuid.v4().substr(0, 8);
         await pool.execute('INSERT INTO token (Token) VALUES (?)', [newToken]);
         return newToken;
     } catch (error) {
-        console.error('Error generating token:', error.message);
-        throw new Error('Internal Server Error');
+        console.error('Error generating token:', error);
+        throw new Error('Unable to generate token');
     }
 };
 
@@ -25,8 +24,8 @@ const validateToken = async (token) => {
         const [results] = await pool.execute('SELECT * FROM token WHERE Token = ?', [token]);
         return results.length > 0;
     } catch (error) {
-        console.error('Error validating token:', error.message);
-        throw new Error('Internal Server Error');
+        console.error('Error validating token:', error);
+        throw new Error('Unable to validate token');
     }
 };
 
