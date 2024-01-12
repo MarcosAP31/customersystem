@@ -23,7 +23,7 @@ module.exports = [
                 const RegistrationDate = new Date().toISOString();
 
                 // Registrar customere en la base de datos
-                const [CustomerId] = await pool.execute('INSERT INTO customers (name, email, phone, registration_date) VALUES (?, ?, ?, ?)', [name, email, phone, registrationDate]);
+                const [CustomerId] = await pool.execute('INSERT INTO customers (Name, Email, Phone, RegistrationDate) VALUES (?, ?, ?, ?)', [Name, Email, Phone, RegistrationDate]);
 
                 // Consultar el parámetro de envío de correos en Redis
                 const sendEmailEnabled = await getAsync('sendEmailEnabled');
@@ -60,9 +60,9 @@ module.exports = [
         options: {
             validate: {
                 payload: Joi.object({
-                    name: Joi.string().required(),
-                    email: Joi.string().email().required(),
-                    phone: Joi.string().required(),
+                    Name: Joi.string().required(),
+                    Email: Joi.string().email().required(),
+                    Phone: Joi.string().required(),
                 }),
             },
         },

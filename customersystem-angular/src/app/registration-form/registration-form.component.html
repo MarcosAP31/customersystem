@@ -1,14 +1,37 @@
 <!-- registration-form.component.html -->
 
 <div>
-    <h2>Formulario de Registro</h2>
-  
-    <label for="token">Token de Seguridad:</label>
-    <input type="text" id="token" [(ngModel)]="token" readonly>
-  
-    <!-- Agrega aquí los campos del formulario para el registro de clientes -->
-  
-    <button (click)="generateToken()">Generar Nuevo Token</button>
-  
-    <!-- Agrega aquí el botón para enviar el formulario -->
-  </div>
+  <h2>Formulario de Registro</h2>
+
+  <label for="token">Token de Seguridad:</label>
+  <input type="text" id="token" [(ngModel)]="token" readonly>
+
+  <!-- Agrega aquí los campos del formulario para el registro de clientes -->
+  <form ngNativeValidate [formGroup]="formCustomer" (ngSubmit)="submit()">
+    <div class="form-group">
+      <label for="inputNombres">Nombre</label>
+      <input required type="text" class="form-control" Name="" formControlName="Name" class="form-control"
+        placeholder="Ingrese nombres" required>
+    </div>
+    <div class="form-group">
+      <label for="inputUsuario">Correo</label>
+      <input required type="text" class="form-control" Name="" formControlName="Email" class="form-control"
+        placeholder="Ingrese correo" required>
+    </div>
+    <div class="form-group">
+      <label for="inputUsuario">Teléfono</label>
+      <input required type="text" class="form-control" Name="" formControlName="Phone" class="form-control"
+        placeholder="Ingrese teléfono" required>
+    </div>
+
+    <div class="justify-content-between">
+      <button type="button" class="btn btn-default" data-dismiss="modal" (click)="closeModal()"> Cerrar</button>
+      <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;
+        Guardar</button>
+    </div>
+  </form>
+
+  <button (click)="generateToken()">Generar Nuevo Token</button>
+
+  <!-- Agrega aquí el botón para enviar el formulario -->
+</div>

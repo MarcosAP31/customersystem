@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class SdkService {
   private securityApiUrl = 'http://localhost:3006';
-  private clientsApiUrl = 'http://localhost:3004';
+  private customersApiUrl = 'http://localhost:3004';
 
   constructor(private http: HttpClient) { }
 
@@ -15,7 +15,7 @@ export class SdkService {
     return this.http.post(`${this.securityApiUrl}/generate-token`, {});
   }
 
-  registerClient(data: any): Observable<any> {
-    return this.http.post(`${this.clientsApiUrl}/register-client`, data);
+  registerCustomer(data: any): Observable<any> {
+    return this.http.post(`${this.customersApiUrl}/register-customer`, data);
   }
 }

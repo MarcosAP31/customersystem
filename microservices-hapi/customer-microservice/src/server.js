@@ -17,7 +17,7 @@ const init = async () => {
     await setAsync('sendEmailEnabled', 'true'); // Puedes ajustar el valor según tus necesidades
 
     // Consultar parámetro de envío de correos al inicio del microservicio
-    const sendEmailParam = await getAsync('sendEmail');
+    const sendEmailParam = await getAsync('sendEmailEnabled');
 
     // Registra las rutas desde el archivo de rutas
     server.route(routes);

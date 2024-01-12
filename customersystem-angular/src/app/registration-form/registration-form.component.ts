@@ -1,7 +1,7 @@
 // registration-form.component.ts
 
 import { Component, OnInit } from '@angular/core';
-import { SdkService } from '../sdk.service';
+import { SdkService } from '../service/sdk.service';
 
 @Component({
   selector: 'app-registration-form',
@@ -30,8 +30,8 @@ export class RegistrationFormComponent implements OnInit {
     );
   }
 
-  registerClient() {
-    this.sdkService.registerClient(this.registrationData).subscribe(
+  registerCustomer() {
+    this.sdkService.registerCustomer(this.registrationData).subscribe(
       (response: any) => {
         console.log('Cliente registrado exitosamente:', response);
       },
